@@ -4,19 +4,25 @@ arr = [i+1 for i in range(N)]
 output = []
 
 k = K-1
-
-while True:
+flag = 1
+while flag:
 
     for i in range(K):
+
+        if len(arr) == 0:
+            flag = 0
+            break
+
         if i == K-1:
             output.append(arr.pop(0))
         else:
             arr.append(arr.pop(0))
+            
     
-    if len(arr) < K:
-        for _ in range(len(arr)):
-            output.append(arr.pop(0))
-        break
+    # if len(arr) < K:
+    #     for _ in range(len(arr)):
+    #         output.append(arr.pop(0))
+    #     break
 
 
 # 1 
@@ -45,14 +51,16 @@ while True:
 #     k += K - 1
 
 
-for i in range(N):
+# 출력
+# for i in range(N):
 
-    if i == N-1:
-        print(f'{output[i]}>', end='')
+#     if i == N-1:
+#         print(f'{output[i]}>')
     
-    elif i == 0:
-        print(f'<{output[i]}, ', end='')
+#     elif i == 0:
+#         print(f'<{output[i]}, ', end='')
     
-    else:
-        print(f'{output[i]}, ', end='')
-print()
+#     else:
+#         print(f'{output[i]}, ', end='')
+
+print('<' +", ".join(map(str, output))+ ">")
