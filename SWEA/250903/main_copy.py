@@ -111,4 +111,4 @@ for test_case in range(1, tests + 1):
 
             # 암호 찾았으면 앞으로
             idx -= 1
-    print(test_case, result)
+    print(f'#{test_case} {result}')

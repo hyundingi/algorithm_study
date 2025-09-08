@@ -8,13 +8,6 @@ def fibonachi(num):
     dp[0], dp[1] = 0, 1
     for i in range(2, num+1):
         dp[i] = dp[i-2] + dp[i-1]
-
-        if i % 2 == 0:
-            count_zero += 1
-            count_one +=1 
-        elif i % 2 == 1:
-            count_one += 2
-            count_zero += 1
             
     return dp[num]
 
