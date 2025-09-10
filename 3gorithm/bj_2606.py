@@ -2,30 +2,28 @@
 1. 연결된 네트워크 리스트 만들기
 - 한 컴퓨터에 최대로 연결될 수 있는 네트워크의 수는 N-1
 """
+from collections import deque
 
 
-# dfs 
+# dfs
 def dfs(virus):
-    # 제일 첫번째 바이러스 추가
-    while True:
-        if network[virus]:
-            # 방문한 네트워크 visit에 추가
-            visit[virus] = 1
-            # 연결된 컴퓨터가 한개 이상일 경우 찾는 for문
-            # stack에 저장해놓고 0을 만났을 때 pop할거임
-            for j in range(1, len(network[virus])):
-                stack.append(network[virus][j])
+    while q:
+        virus = q.popleft()
 
-            virus = network[virus][0]
-        # 연결된 네트워크가 없으면
-        #  stack 에 있는 값을 꺼내 다시 시작
+        # 이미 방문한 적 있으면 pass
+        if visit[virus] == 1:
+            continue
+
+        # 방문한 적 없으면 방문 표시
         else:
             visit[virus] = 1
-            if stack:
-                virus = stack.pop()
-            else:
-                break
-        
+            # 순회하며 연결된 네트워크를 찾아 덱에 넣어준다
+            for j in range(len(network[virus])):
+                # 방문한 적 있는 애면 안 넣음
+                if visit[network[virus][j]] == 1:
+                    continue
+
+                q.append(network[virus][j])
 
 
 # 컴퓨터의 수
@@ -35,19 +33,19 @@ N = int(input())
 conect = int(input())
 # 네트워크 연결 정보 저장
 network = [[] for i in range(N + 1)]
-# 연결된 네트워크가 한개 이상일 때 정보 저장
-stack = []
 # 방문 여부 저장
 visit = [0] * (N + 1)
 
 for c in range(conect):
     a, b = map(int, input().split())
 
-    # 네트워크 연결 정보 저장
+    # 네트워크 연결 정보 저장 
+    # 꼭 양방향으로 저장해야한다 .. 
     network[a].append(b)
+    network[b].append(a)
 
-print(network)
-
+# 연결된 네트워크가 한개 이상일 때 정보 저장
+q = deque([1])
 dfs(1)
-print(visit)
-print(visit.count(1))
+# 처음 걸린 컴퓨터는 제외한다
+print(visit.count(1) - 1)
