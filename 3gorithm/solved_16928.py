@@ -39,6 +39,72 @@ def bfs(start):
 
         count += 1
 
+# -----------------------------
+import sys
+sys.stdin = open("input.txt")
+
+N, M = map(int, input().split())
+board = [0] * 101
+
+# 사다리 정보 저장
+for n in range(N):
+    start, end = map(int, input().split())
+    board[end] = start
+
+# 뱀 정보 저장
+for m in range(M):
+    start, end = map(int, input().split())
+    board[start] = end
+
+# 거꾸로 가자
+now, count, dice = 100, 0, 0
+while now > 1:
+
+    now -= 1
+    count += 1
+    print(now)
+    print(dice)
+
+    # 일단 6만큼 감
+    if count == 6:
+        dice += 1
+        count = 0
+
+    # 6만큼 왔는데 사다리 혹은 뱀을 만날 경우 처리
+    if count == 0:
+        if board[now] > 0:
+            now = board[now]
+            continue
+        elif board[now] != 0 and board[now] < now:
+            now += 1
+            continue
+
+    # 6가기 전에 사다리 만났을 경우
+    if board[now] > 0:
+        now = board[now]
+        print('사다리 ', now)
+        count = 0
+        dice += 1
+
+
+
+print('주사위 ', dice)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
