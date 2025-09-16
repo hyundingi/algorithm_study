@@ -10,9 +10,9 @@ dxs = [0, 1, 0, -1]
 
 # 인접한 배추에 방문체크 하는 함수
 def check(y, x):
-    q = [(y, x)]
-    while q:
-        y, x = q.pop()
+    cnt = 0
+    while cnt < 4:
+        cnt = 0
         for i in range(4):
             # 인덱스 범위를 벗어나지 않고,
             # print('y : ', y+dys[i],'x : ', x + dxs[i])
@@ -20,12 +20,21 @@ def check(y, x):
 
                 # 방문한 적 없고,
                 if visited[y+dys[i]][x+dxs[i]] == 1:
+                    cnt += 1
                     continue
 
                 # 배추가 심어져있으면 방문 처리, y, x 재할당 후 break
                 if farm[y+dys[i]][x+dxs[i]] == 1:
                     visited[y+dys[i]][x+dxs[i]] = 1
-                    q.append((y+dys[i], x+dxs[i]))
+                    y, x = y+dys[i], x+dxs[i]
+                    # print(y, x)
+                    break
+
+                # 배추가 안 심겨있을 때
+                else:
+                    cnt += 1
+            else:
+                cnt += 1
 
     return 1
 
@@ -44,9 +53,9 @@ for t in range(T):
         x, y = map(int, input().split())
         farm[y][x] = 1
 
-    # for f in farm:
-    #     print(f)
-    # print('--------밭')
+    for f in farm:
+        print(f)
+    print('--------밭')
 
     # 인접한 위치에 배추가 있으면 방문표시 반복
     for i in range(N):
@@ -58,10 +67,10 @@ for t in range(T):
                 visited[i][j] = 1
                 result += check(i, j)
 
-                # print('방문-----------')
-                # for v in visited:
-                #     print(v)
-                # print('지렁이 : ', result)
+                print('방문-----------')
+                for v in visited:
+                    print(v)
+                print('지렁이 : ', result)
 
     print(result)
 
