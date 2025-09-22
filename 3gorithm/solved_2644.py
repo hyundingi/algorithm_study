@@ -1,22 +1,30 @@
 from collections import deque
 
 def bfs(start):
-    global result
+    result = 0
     queue = deque()
-    queue.append(start)
+    queue.append((start, 0))
 
     while queue:
-        people = queue.popleft()
+        people, cs = queue.popleft()
+        # print(people, cs)
+        if chonsu[people]: 
+            if visited[people]:
+                continue 
 
-        if chonsu[people]:
-            if p1 or p2 in chonsu[people]:
-                result += 1
-                
+            if people == p2:
+                return cs 
+
             for i in range(len(chonsu[people])):
-                if visited[chonsu[people][i]]:
-                    continue
-                visited[chonsu[people][i]] = 1
-                queue.append(chonsu[people][i])
+                if visited[people]:
+                    continue 
+                queue.append((chonsu[people][i], cs + 1))
+            
+            visited[people] = 1
+
+
+        # print(chonsu[people], result)
+    return -1
 
 
 n = int(input())
@@ -24,13 +32,13 @@ p1, p2 = map(int, input().split())
 m = int(input())
 
 chonsu = [[]] + [[] for _ in range(n)]
-print(chonsu)
 visited = [0] * (n + 1)
+
 for i in range(m):
     a, b = map(int, input().split())
     chonsu[a].append(b)
+    chonsu[b].append(a)
 
-print(chonsu)
-result = 0
-bfs(1)
+# print(chonsu)
+result = bfs(p1)
 print(result)
