@@ -10,23 +10,23 @@ def bfs(y, x):
     queue.append((y,x))
     cnt = 0
     while queue:
-        y, x = queue.popleft()
+        qy, qx = queue.popleft()
         visited[y][x] = 1
 
         for d in range(4):
-            ny = y + dys[d]
-            nx = x + dxs[d]
+            ny = qy + dys[d]
+            nx = qx + dxs[d]
 
             # 인덱스 에러 방지
             if 0 <= ny < n and 0 <= nx < n:
                 # 상 하 좌 우 에 나보다 큰 값이 있는지 확인
-                if forest[y][x] < forest[ny][nx]:
+                if forest[qy][qx] < forest[ny][nx]:
                     # 방문한 적 있으면 pass
                     if visited[ny][nx]:
                         continue
                     queue.append((ny, nx))
-                    cnt += 1
-
+        cnt += 1
+    print(y, x, forest[y][x], cnt)
     return cnt
 
 
