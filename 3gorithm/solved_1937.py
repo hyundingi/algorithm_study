@@ -1,43 +1,33 @@
-from collections import deque
+import sys
+sys.setrecursionlimit(10**6)
 
 # 상 하 좌 우
 dys = [-1, 1, 0, 0]
 dxs = [0, 0, -1, 1]
 
-def bfs(y, x):
-    visited = [[0] * n for _ in range(n)]
-    queue = deque()
-    queue.append((y,x))
-    cnt = 0
-    while queue:
-        qy, qx = queue.popleft()
-        visited[y][x] = 1
+def dfs(y, x):
+    # 이미 계산된 값이 있으면 그걸 그대로 return
+    if dp[y][x] > 1:
+        return dp[y][x]
 
-        for d in range(4):
-            ny = qy + dys[d]
-            nx = qx + dxs[d]
+    for d in range(4):
+        dy = y + dys[d]
+        dx = x + dxs[d]
 
-            # 인덱스 에러 방지
-            if 0 <= ny < n and 0 <= nx < n:
-                # 상 하 좌 우 에 나보다 큰 값이 있는지 확인
-                if forest[qy][qx] < forest[ny][nx]:
-                    # 방문한 적 있으면 pass
-                    if visited[ny][nx]:
-                        continue
-                    queue.append((ny, nx))
-        cnt += 1
-    print(y, x, forest[y][x], cnt)
-    return cnt
+        # 주변을 돌면서 나보다 큰 값을 찾는다
+        # 그 큰 값의 주변의 큰 값 + 1 하며 나온 값을 dp 에 저장한다
+        if 0 <= dy < n and 0 <= dx < n and forest[y][x] < forest[dy][dx]:
+            dp[y][x] = max(dp[y][x], dfs(dy, dx) + 1)
 
-
+    return dp[y][x] 
 
 n = int(input())
 forest = [list(map(int, input().split())) for _ in range(n)]
+dp = [[1] * n for _ in range(n)]
 
 result = 0
-for i in range(n):
-    for j in range(n):
-        a = bfs(i, j)
-        result = max(a, result)
+for y in range(n):
+    for x in range(n):
+        result = max(dfs(y, x), result)
 
 print(result)
