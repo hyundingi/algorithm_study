@@ -1,10 +1,12 @@
 import sys
-sys.setrecursionlimit(10**6)
+sys.stdin = open('input.txt')
 
 N, r, c = map(int, input().split())
 
 
 # 2 n-1 로 4 등분힘 > 4등분의 끝을 만나면 다음으로 넘어감
+# 몇사분면에 있는지?
+# 그 사분면 어디인지
 
 #왼위, 오위, 왼아, 오아
 dys = [0, 0, 1, 1]
