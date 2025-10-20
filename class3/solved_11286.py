@@ -1,21 +1,21 @@
 import sys
-sys.stdin = open('input.txt')
 import heapq
 
-heap = []
 
 N = int(sys.stdin.readline())
-
+heap = []
 for n in range(N):
-    num = int(sys.stdin.readline())
+    x = int(sys.stdin.readline())
 
-    if num == 0:
+    if x == 0:
         if heap:
-            heapq.heappop(heap)
-            print()
+            # print(*heap)
+            print(heapq.heappop(heap)[1])
         else:
             print(0)
-        
         continue
 
-    heapq.heappush(heap, num)
+    heapq.heappush(heap, (abs(x), x))
+
+
+
