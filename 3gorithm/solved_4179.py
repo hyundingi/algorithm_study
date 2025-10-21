@@ -15,22 +15,22 @@ dys = [0, 1, 0, -1]
 dxs = [1, 0, -1, 0]
 
 def bfs(jy, jx, fire_q):
-    cnt = 0
     q = deque()
-    q.append((jy, jx, cnt))
+    q.append((jy, jx, 0))
     visited[jy][jx] = 1
 
     while q:
         y, x, cnt = q.popleft()
-        visited[y][x] = 1
-
+        # print(q)
         for d in range(4):
             dy = y + dys[d]
             dx = x + dxs[d]
 
             if 0 <= dy < R and 0 <= dx < C:
-                if miro[dy][dx] == '.' and visited[dy][dx] == 0 and fire_time[dy][dx] <= cnt + 1:
-                    q.append((dy, dx, cnt + 1))
+                if miro[dy][dx] == '.' and visited[dy][dx] == 0:
+                    if fire_time[dy][dx] == -1 or fire_time[dy][dx] > cnt + 1:
+                        visited[dy][dx] = 1
+                        q.append((dy, dx, cnt + 1))
             else:
                 return cnt + 1
 
@@ -44,9 +44,10 @@ def wide_fire():
             dy = y + dys[d]
             dx = x + dxs[d]
 
-            if 0 <= dy < R and 0 <= dx < C and miro[dy][dx] == '.' and fire_time[dy][dx] > :
-                fire_time[dy][dx] = cnt + 1
-                fire_q.append((dy, dx))
+            if 0 <= dy < R and 0 <= dx < C:
+                if miro[dy][dx] != '#' and fire_time[dy][dx] == -1:
+                    fire_time[dy][dx] = cnt + 1
+                    fire_q.append((dy, dx))
 
 
 # def wide_fire(fire_q):
