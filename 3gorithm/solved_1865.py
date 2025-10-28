@@ -3,6 +3,24 @@ import heapq
 from collections import deque
 sys.stdin = open('input.txt')
 
+def bellman_ford(start):
+    dists[start] = 0
+
+    for i in range(N):
+        for j in range(len(world)):
+            node = world[j][0]
+            next_node = world[j][1]
+            dist = world[j][2]
+            # 현재 간선을 거쳐서 다른 노드로 이동하는 거리가 더 짧은 경우
+            if dists[next_node] > dists[node] + dist:
+                dists[next_node] = dists[node] + dist
+
+                # v번째 라운드에서도 값이 갱신된다면 음수 순환이 존재한다는 뜻
+                if i == N - 1:
+                    return False
+
+    return True 
+
 T = int(input())
 INF = int(1e9)
 for t in range(T):
@@ -14,26 +32,21 @@ for t in range(T):
     for _ in range(M):
         S, E, T = map(int, input().split())
         world.append((S, E, T))
+        world.append((E, S, T))
 
     # 웜홀의 정보 (단방향)
     for _ in range(W):
         S, E, T = map(int, input().split())
         world.append((S, E, -T))
+    
+    result = bellman_ford(1)
 
-    def bellman_ford(start):
-        dists[start] = 0
+    if result:
+        print(dists)
+        print("NO")
+    else:
+        print('YES')
 
-        for i in range(N):
-            for j in range(len(world)):
-                node = world[j][0]
-                next_node = world[j][1]
-                dist = world[j][2]
-                # 현재 간선을 거쳐서 다른 노드로 이동하는 거리가 더 짧은 경우
-                if dists[node] != INF and dists[next_node] > dists[node] + dist:
-                    dists[next_node] = dists[node] + dist
-
-                    # v번째 라운드에서도 값이 갱신된다면 음수 순환이 존재한다는 뜻
-                    # 
 
 # def dijkstra(start_node):
 #     # 누적 거리, 노드 번호
