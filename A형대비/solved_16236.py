@@ -13,52 +13,17 @@ sys.stdin = open('input.txt')
 dys = [0, 1, 0, -1]
 dxs = [1, 0, -1, 0]
 
-def find_fish(y, x):
-    global shark
-    fish_y, fish_x = 100, 100
-    idx = 0
-    for i in range(len(fishes)):
-        if fishes[i][0] == 0:
-            continue
-        if fishes[i][0] < shark:
-            # 더 가까이에 있는 거 찾기
-            if abs(y - fish_y) + abs(x - fish_x) > abs(y - fishes[i][1]) + abs(x - fishes[i][2]):
-                fish_y = fishes[i][1]
-                fish_x = fishes[i][2]
-                idx = i
-            # 거리가 같을 때
-            elif abs(y - fish_y) + abs(x - fish_x) == abs(y - fishes[i][1]) + abs(x - fishes[i][2]):
-                # 더 위에 있는 거 먼저 찾기
-                if fish_y > fishes[i][1]:
-                    fish_y = fishes[i][1]
-                    fish_x = fishes[i][2]
-                    idx = i
-                # 높이도 같을 때
-                elif fish_y == fishes[i][1]:
-                    # 더 왼쪽에 있는 거 찾기
-                    if fish_x > fishes[i][2]:
-                        fish_y = fishes[i][1]
-                        fish_x = fishes[i][2]
-                        idx = i
-    print(fishes)
-    print(shark)
-    fishes[idx][0] = 0
-    return fish_y, fish_x
-
-
-
-def bfs(y, x, sec):
+def bfs(y, x):
     q = deque()
-    q.append((y, x, sec))
-    fish_y, fish_x = find_fish(y, x)
-    if fish_y == 100:
-        return 0, 0, 0
-    visited = [[0] * N for _ in range(N)]
+    q.append((y, x))
+
+    visited = [[-1] * N for _ in range(N)]
+    visited[y][x] = 0
+
+    fishes = []
+
     while q:
-        y, x, sec = q.popleft()
-        if fish_y == y and fish_x == x:
-            print(y, x, sec)
-            return y, x, sec
+        y, x = q.popleft()
 
         for d in range(4):
             dy = y + dys[d]
@@ -67,12 +32,19 @@ def bfs(y, x, sec):
             if 0 <= dy < N and 0 <= dx < N:
                 if grid[dy][dx] > shark:
                     continue
-                if visited[dy][dx]:
+                if visited[dy][dx] != -1:
                     continue
-                q.append((dy, dx, sec + 1))
-                visited[dy][dx] = 1
-    print(y,x,sec)
-    return y, x, sec
+                q.append((dy, dx))
+                visited[dy][dx] = visited[y][x] + 1
+
+                if 0 < grid[dy][dx] < shark:
+                    fishes.append((visited[dy][dx], dy, dx))
+    
+    if not fishes:
+        return None
+    
+    fishes.sort()
+    return fishes[0]
 
 N = int(input())
 grid = [list(map(int, input().split())) for _ in range(N)]
@@ -83,24 +55,30 @@ for i in range(N):
     for j in range(N):
         if grid[i][j] == 9:
             baby_y, baby_x = i, j
+            grid[i][j] = 0
 
-        elif grid[i][j] != 0:
-            fishes.append([grid[i][j], i, j])
 
-fishes = sorted(fishes, key=lambda x:x[0])
-print(fishes)
-# 상어 크기, 먹은 물고기
+# 상어 크기, 먹은 물고기, 최종 출력
 shark, eat, result = 2, 0, 0
-for i in range(len(fishes)):
-    baby_y, baby_x, sec = bfs(baby_y, baby_x, 0)
-    if sec == 0:
+
+while True:
+    target = bfs(baby_y, baby_x)
+    if target is None:
         break
+
+    sec, baby_y, baby_x = target    
+    print(target)
     eat += 1
     result += sec
+
+    # 물고기 먹으면 0으로 변경
+    grid[baby_y][baby_x] = 0
+
     if eat == shark:
         shark += 1
         eat = 0
 
+    # print(baby_y, baby_x, sec, shark)
 print(result)
 
 
