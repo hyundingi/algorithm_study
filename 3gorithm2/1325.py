@@ -13,6 +13,8 @@ def bfs(start):
         node = q.popleft()
 
         for n in network[node]:
+            if visited[n]:
+                continue
             q.append(n)
             visited[n] = True
             count += 1
